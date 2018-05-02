@@ -1,4 +1,4 @@
-ac
+abc
+a
 b
 ab
-c

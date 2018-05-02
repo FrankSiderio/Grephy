@@ -85,12 +85,11 @@ if(os.path.isfile(inputFile) and os.path.isfile(regexFile)):
         input = f.readlines()
 
     regex = regex.rstrip()
-    print regex
+
     for i in input:
         i = i.rstrip()
-        print (i + ": " + str(match(regex, i)))
-        # print "\n"
+        if(match(regex, i)):
+            print i
 
-    # print match(regex, input)
 else:
     print("File not found. Try again")
