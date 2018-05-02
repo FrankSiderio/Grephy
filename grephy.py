@@ -1,18 +1,27 @@
 import os
 import sys
 
-def match(re, s): return run(prepare(re), s)
+def match(regex, s):
+    return run(prepare(regex), s)
 
 def run(states, s):
     for c in s:
         states = set.union(*[state(c) for state in states])
+
     return accepting_state in states
 
-def accepting_state(c): return set()
-def expecting_state(char, k): return lambda c: k(set()) if c == char else set()
+def accepting_state(c):
+    return set()
 
-def state_node(state): return lambda seen: set([state])
-def alt_node(k1, k2):  return lambda seen: k1(seen) | k2(seen)
+def expecting_state(char, k):
+    return lambda c: k(set()) if c == char else set()
+
+def state_node(state):
+    return lambda seen: set([state])
+
+def alt_node(k1, k2):
+    return lambda seen: k1(seen) | k2(seen)
+
 def loop_node(k, make_k):
     def loop(seen):
         if loop in seen: return set()
@@ -21,23 +30,23 @@ def loop_node(k, make_k):
     looping = make_k(loop)
     return loop
 
-def prepare(re):
-    ts = list(re)
+def prepare(regex):
+    ts = list(regex)
 
     def parse_expr(precedence, k):
         rhs = parse_factor(k)
         while ts:
             if ts[-1] == '(': break
-            prec = 2 if ts[-1] == '|' else 4
+            prec = 2 if ts[-1] == '+' else 4
             if prec < precedence: break
-            if chomp('|'):
+            if chomp('+'):
                 rhs = alt_node(parse_expr(prec + 1, k), rhs)
             else:
                 rhs = parse_expr(prec + 1, rhs)
         return rhs
 
     def parse_factor(k):
-        if not ts or ts[-1] in '|(':
+        if not ts or ts[-1] in '+(':
             return k
         elif chomp(')'):
             e = parse_expr(0, k)
@@ -55,6 +64,7 @@ def prepare(re):
 
     k = parse_expr(0, state_node(accepting_state))
     assert not ts
+
     return k(set())
 
 inputFile = str(sys.argv[1])
@@ -74,9 +84,12 @@ if(os.path.isfile(inputFile) and os.path.isfile(regexFile)):
     with inputFile as f:
         input = f.readlines()
 
+    regex = regex.rstrip()
+    print regex
     for i in input:
-        print (i + str(match(regex, i)))
-        print "\n"
+        i = i.rstrip()
+        print (i + ": " + str(match(regex, i)))
+        # print "\n"
 
     # print match(regex, input)
 else:
