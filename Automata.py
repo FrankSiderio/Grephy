@@ -129,7 +129,7 @@ class Automata:
         return dotFile
 
 class BuildAutomata:
-    """class for building e-nfa basic structures"""
+    # Class for building e-nfa basic structures
 
     @staticmethod
     def basicstruct(inp):
