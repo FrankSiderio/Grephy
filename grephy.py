@@ -4,32 +4,62 @@ from Nfa import *
 from Dfa import *
 
 # Example call - python Grephy.py -n nfaFile -d dfaFile tests/regex.txt tests/input.txt
+nfaFile = None
+dfaFile = None
+regexFile = None
+inputFile = None
+draw = None
 
-# If the length is 5 enough paramters were supplied
-if(len(sys.argv) >= 5):
-    nfaFile = None
-    dfaFile = None
-    # User wants an nfa
-    if(str(sys.argv[1]) == "-n"):
-        nfaFile = str(sys.argv[2])
-        # Check if they also want a dfa
-        if(str(sys.argv[3]) == "-d"):
-            dfaFile = str(sys.argv[4])
-    # Just want a dfa
-    elif(str(sys.argv[1]) == "-d"):
-        dfaFile = str(sys.argv[2])
-        # Check if they also want an nfa
-        if(str(sys.argv[3]) == "-n"):
-            nfaFile = str(sys.argv[4])
+def main():
+    handleInput()
+    createAutomatas()
 
-    # Params 5 and 6 should be regex and input
-    inputFile = str(sys.argv[5])
-    regexFile = str(sys.argv[6])
 
-    draw = None
-    for i in sys.argv:
-        if(i == "-draw"):
-            draw = True
+def handleInput():
+    global regexFile
+    global inputFile
+    global nfaFile
+    global dfaFile
+    global draw
+
+    # If the length is 5 enough paramters were supplied
+    if(len(sys.argv) >= 5):
+        # User wants an nfa
+        if(str(sys.argv[1]) == "-n"):
+            nfaFile = str(sys.argv[2])
+            # Check if they also want a dfa
+            if(str(sys.argv[3]) == "-d"):
+                dfaFile = str(sys.argv[4])
+                regexFile = str(sys.argv[5])
+                inputFile = str(sys.argv[6])
+            else:
+                regexFile = str(sys.argv[3])
+                inputFile = str(sys.argv[4])
+        # Just want a dfa
+        elif(str(sys.argv[1]) == "-d"):
+            dfaFile = str(sys.argv[2])
+            # Check if they also want an nfa
+            if(str(sys.argv[3]) == "-n"):
+                nfaFile = str(sys.argv[4])
+                regexFile = str(sys.argv[5])
+                inputFile = str(sys.argv[6])
+            else:
+                regexFile = str(sys.argv[3])
+                inputFile = str(sys.argv[4])
+
+
+        for i in sys.argv:
+            if(i == "-draw"):
+                draw = True
+
+
+def createAutomatas():
+    global regexFile
+    global inputFile
+    global nfaFile
+    global dfaFile
+    global draw
+
     # Check if file exists
     if(os.path.isfile(inputFile) and os.path.isfile(regexFile)):
         print("Found input and regex files.")
@@ -60,9 +90,11 @@ if(len(sys.argv) >= 5):
                 drawGraph(dfa, dfaFile)
 
         # Create the dot files
-        dfa.createDotFile(dfaFile)
-        nfa.createDotFile(nfaFile)
-
+        if(nfaFile != None):
+            nfa.createDotFile(nfaFile)
+        if(dfaFile != None):
+            dfa.createDotFile(dfaFile)
+        print "Done."
         for i in input:
             i = i.rstrip()
             # if(match(regex, i)):
@@ -70,3 +102,6 @@ if(len(sys.argv) >= 5):
 
     else:
         print("File not found. Try again")
+
+if __name__ == "__main__":
+    main()
