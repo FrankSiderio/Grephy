@@ -1,5 +1,6 @@
 import os
 import sys
+from Nfa import *
 
 def match(regex, s):
     return run(prepare(regex), s)
@@ -32,7 +33,7 @@ def loop_node(k, make_k):
 
 def prepare(regex):
     ts = list(regex)
-
+    print ts
     def parse_expr(precedence, k):
         rhs = parse_factor(k)
         while ts:
@@ -86,10 +87,15 @@ if(os.path.isfile(inputFile) and os.path.isfile(regexFile)):
 
     regex = regex.rstrip()
 
+    nfaObj = Nfa(regex)
+    nfa = nfaObj.getNFA()
+    print "\nNFA: "
+    nfaObj.displayNFA()
+
     for i in input:
         i = i.rstrip()
-        if(match(regex, i)):
-            print i
+        # if(match(regex, i)):
+            # print i
 
 else:
     print("File not found. Try again")
