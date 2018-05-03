@@ -114,7 +114,7 @@ class Automata:
             rebuild.addfinalstates(pos[s])
         return rebuild
 
-    def createDotFile(self, filePath):
+    def getDotFile(self):
         dotFile = "digraph DFA {\nrankdir=LR\n"
         if len(self.states) != 0:
             dotFile += "root=s1\nstart [shape=point]\nstart->s%d\n" % self.startstate
@@ -129,12 +129,13 @@ class Automata:
                         dotFile += 's%d->s%d [label="%s"]\n' % (fromstate, state, char)
         dotFile += "}"
 
-        # Create the dot file
-        file = open(filePath + ".dot", "w+")
-        file.write(dotFile)
-        file.close()
-        
         return dotFile
+
+    # Creates the dot file
+    def createDotFile(self, filePath):
+        file = open(filePath + ".dot", "w+")
+        file.write(self.getDotFile())
+        file.close()
 
 class BuildAutomata:
     # Class for building e-nfa basic structures
@@ -197,9 +198,8 @@ class BuildAutomata:
 
 
 
-def drawGraph(automata, file = ""):
-    """From https://github.com/max99x/automata-editor/blob/master/util.py"""
-    f = popen(r"dot -Tpng -o graph%s.png" % file, 'w')
+def drawGraph(automata, file):
+    f = popen(r"dot -Tpng -o %s.png" % file, 'w')
     try:
         f.write(automata.getDotFile())
     except:
