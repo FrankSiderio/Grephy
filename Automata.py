@@ -18,14 +18,14 @@ class Automata:
         self.startState = state
         self.states.add(state)
 
-    def addfinalStates(self, state):
+    def addFinalStates(self, state):
         if isinstance(state, int):
             state = [state]
         for s in state:
             if s not in self.finalStates:
                 self.finalStates.append(s)
 
-    def addtransition(self, fromstate, tostate, inp):
+    def addTransition(self, fromstate, tostate, inp):
         if isinstance(inp, str):
             inp = set([inp])
         self.states.add(fromstate)
@@ -38,12 +38,12 @@ class Automata:
         else:
             self.transitions[fromstate] = {tostate : inp}
 
-    def addtransition_dict(self, transitions):
+    def addTransitionDict(self, transitions):
         for fromstate, tostates in transitions.items():
             for state in tostates:
-                self.addtransition(fromstate, state, tostates[state])
+                self.addTransition(fromstate, state, tostates[state])
 
-    def gettransitions(self, state, key):
+    def getTransitions(self, state, key):
         if isinstance(state, int):
             state = [state]
         trstates = set()
@@ -98,20 +98,20 @@ class Automata:
             startnum += 1
         rebuild = Automata(self.language)
         rebuild.setstartState(translations[self.startState])
-        rebuild.addfinalStates(translations[self.finalStates[0]])
+        rebuild.addFinalStates(translations[self.finalStates[0]])
         for fromstate, tostates in self.transitions.items():
             for state in tostates:
-                rebuild.addtransition(translations[fromstate], translations[state], tostates[state])
+                rebuild.addTransition(translations[fromstate], translations[state], tostates[state])
         return [rebuild, startnum]
 
     def newBuildFromEquivalentStates(self, equivalent, pos):
         rebuild = Automata(self.language)
         for fromstate, tostates in self.transitions.items():
             for state in tostates:
-                rebuild.addtransition(pos[fromstate], pos[state], tostates[state])
+                rebuild.addTransition(pos[fromstate], pos[state], tostates[state])
         rebuild.setstartState(pos[self.startState])
         for s in self.finalStates:
-            rebuild.addfinalStates(pos[s])
+            rebuild.addFinalStates(pos[s])
         return rebuild
 
     def getDotFile(self):
@@ -146,54 +146,54 @@ class BuildAutomata:
         state2 = 2
         basic = Automata()
         basic.setstartState(state1)
-        basic.addfinalStates(state2)
-        basic.addtransition(1, 2, inp)
+        basic.addFinalStates(state2)
+        basic.addTransition(1, 2, inp)
         return basic
 
     @staticmethod
-    def plusstruct(a, b):
+    def plusStructure(a, b):
         [a, m1] = a.newBuildFromNumber(2)
         [b, m2] = b.newBuildFromNumber(m1)
         state1 = 1
         state2 = m2
         plus = Automata()
         plus.setstartState(state1)
-        plus.addfinalStates(state2)
-        plus.addtransition(plus.startState, a.startState, Automata.epsilon())
-        plus.addtransition(plus.startState, b.startState, Automata.epsilon())
-        plus.addtransition(a.finalStates[0], plus.finalStates[0], Automata.epsilon())
-        plus.addtransition(b.finalStates[0], plus.finalStates[0], Automata.epsilon())
-        plus.addtransition_dict(a.transitions)
-        plus.addtransition_dict(b.transitions)
+        plus.addFinalStates(state2)
+        plus.addTransition(plus.startState, a.startState, Automata.epsilon())
+        plus.addTransition(plus.startState, b.startState, Automata.epsilon())
+        plus.addTransition(a.finalStates[0], plus.finalStates[0], Automata.epsilon())
+        plus.addTransition(b.finalStates[0], plus.finalStates[0], Automata.epsilon())
+        plus.addTransitionDict(a.transitions)
+        plus.addTransitionDict(b.transitions)
         return plus
 
     @staticmethod
-    def dotstruct(a, b):
+    def dotStructure(a, b):
         [a, m1] = a.newBuildFromNumber(1)
         [b, m2] = b.newBuildFromNumber(m1)
         state1 = 1
         state2 = m2-1
         dot = Automata()
         dot.setstartState(state1)
-        dot.addfinalStates(state2)
-        dot.addtransition(a.finalStates[0], b.startState, Automata.epsilon())
-        dot.addtransition_dict(a.transitions)
-        dot.addtransition_dict(b.transitions)
+        dot.addFinalStates(state2)
+        dot.addTransition(a.finalStates[0], b.startState, Automata.epsilon())
+        dot.addTransitionDict(a.transitions)
+        dot.addTransitionDict(b.transitions)
         return dot
 
     @staticmethod
-    def starstruct(a):
+    def starStructure(a):
         [a, m1] = a.newBuildFromNumber(2)
         state1 = 1
         state2 = m1
         star = Automata()
         star.setstartState(state1)
-        star.addfinalStates(state2)
-        star.addtransition(star.startState, a.startState, Automata.epsilon())
-        star.addtransition(star.startState, star.finalStates[0], Automata.epsilon())
-        star.addtransition(a.finalStates[0], star.finalStates[0], Automata.epsilon())
-        star.addtransition(a.finalStates[0], a.startState, Automata.epsilon())
-        star.addtransition_dict(a.transitions)
+        star.addFinalStates(state2)
+        star.addTransition(star.startState, a.startState, Automata.epsilon())
+        star.addTransition(star.startState, star.finalStates[0], Automata.epsilon())
+        star.addTransition(a.finalStates[0], star.finalStates[0], Automata.epsilon())
+        star.addTransition(a.finalStates[0], a.startState, Automata.epsilon())
+        star.addTransitionDict(a.transitions)
         return star
 
 

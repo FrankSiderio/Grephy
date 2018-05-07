@@ -33,7 +33,7 @@ class Dfa:
         while len(states) != 0:
             [state, fromindex] = states.pop()
             for char in dfa.language:
-                trstates = nfa.gettransitions(state, char)
+                trstates = nfa.getTransitions(state, char)
                 for s in list(trstates)[:]:
                     if s not in eclose:
                         eclose[s] = nfa.getEClose(s)
@@ -46,10 +46,10 @@ class Dfa:
                         count +=  1
                     else:
                         toindex = [k for k, v in allstates.iteritems() if v  ==  trstates][0]
-                    dfa.addtransition(fromindex, toindex, char)
+                    dfa.addTransition(fromindex, toindex, char)
         for value, state in allstates.iteritems():
             if nfa.finalStates[0] in state:
-                dfa.addfinalStates(value)
+                dfa.addFinalStates(value)
         self.dfa = dfa
 
     def acceptsString(self, string):
@@ -57,7 +57,7 @@ class Dfa:
         for ch in string:
             if ch==":e:":
                 continue
-            st = list(self.dfa.gettransitions(currentstate, ch))
+            st = list(self.dfa.getTransitions(currentstate, ch))
             if len(st) == 0:
                 return False
             currentstate = st[0]
@@ -79,8 +79,8 @@ class Dfa:
                     eq = 1
                     toappend = []
                     for char in self.dfa.language:
-                        s1 = self.dfa.gettransitions(states[i], char)
-                        s2 = self.dfa.gettransitions(states[j], char)
+                        s1 = self.dfa.getTransitions(states[i], char)
+                        s2 = self.dfa.getTransitions(states[j], char)
                         if len(s1) != len(s2):
                             eq = 0
                             break

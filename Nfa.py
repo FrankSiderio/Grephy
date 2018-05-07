@@ -101,13 +101,13 @@ class Nfa:
             raise BaseException("Error processing operator '%s'. Stack is empty" % operator)
         if operator == self.star:
             a = self.automata.pop()
-            self.automata.append(BuildAutomata.starstruct(a))
+            self.automata.append(BuildAutomata.starStructure(a))
         elif operator in self.operators:
             if len(self.automata) < 2:
                 raise BaseException("Error processing operator '%s'. Inadequate operands" % operator)
             a = self.automata.pop()
             b = self.automata.pop()
             if operator == self.plus:
-                self.automata.append(BuildAutomata.plusstruct(b,a))
+                self.automata.append(BuildAutomata.plusStructure(b,a))
             elif operator == self.dot:
-                self.automata.append(BuildAutomata.dotstruct(b,a))
+                self.automata.append(BuildAutomata.dotStructure(b,a))
