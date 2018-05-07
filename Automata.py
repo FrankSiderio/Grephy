@@ -5,8 +5,8 @@ class Automata:
 
     def __init__(self, language = set(['0', '1'])):
         self.states = set()
-        self.startstate = None
-        self.finalstates = []
+        self.startState = None
+        self.finalStates = []
         self.transitions = dict()
         self.language = language
 
@@ -14,16 +14,16 @@ class Automata:
     def epsilon():
         return ":e:"
 
-    def setstartstate(self, state):
-        self.startstate = state
+    def setstartState(self, state):
+        self.startState = state
         self.states.add(state)
 
-    def addfinalstates(self, state):
+    def addfinalStates(self, state):
         if isinstance(state, int):
             state = [state]
         for s in state:
-            if s not in self.finalstates:
-                self.finalstates.append(s)
+            if s not in self.finalStates:
+                self.finalStates.append(s)
 
     def addtransition(self, fromstate, tostate, inp):
         if isinstance(inp, str):
@@ -68,8 +68,8 @@ class Automata:
 
     def display(self):
         print "states:", self.states
-        print "start state: ", self.startstate
-        print "final states:", self.finalstates
+        print "start state: ", self.startState
+        print "final states:", self.finalStates
         print "transitions:"
         for fromstate, tostates in self.transitions.items():
             for state in tostates:
@@ -80,8 +80,8 @@ class Automata:
     def getPrintText(self):
         text = "language: {" + ", ".join(self.language) + "}\n"
         text += "states: {" + ", ".join(map(str,self.states)) + "}\n"
-        text += "start state: " + str(self.startstate) + "\n"
-        text += "final states: {" + ", ".join(map(str,self.finalstates)) + "}\n"
+        text += "start state: " + str(self.startState) + "\n"
+        text += "final states: {" + ", ".join(map(str,self.finalStates)) + "}\n"
         text += "transitions:\n"
         linecount = 5
         for fromstate, tostates in self.transitions.items():
@@ -97,8 +97,8 @@ class Automata:
             translations[i] = startnum
             startnum += 1
         rebuild = Automata(self.language)
-        rebuild.setstartstate(translations[self.startstate])
-        rebuild.addfinalstates(translations[self.finalstates[0]])
+        rebuild.setstartState(translations[self.startState])
+        rebuild.addfinalStates(translations[self.finalStates[0]])
         for fromstate, tostates in self.transitions.items():
             for state in tostates:
                 rebuild.addtransition(translations[fromstate], translations[state], tostates[state])
@@ -109,17 +109,17 @@ class Automata:
         for fromstate, tostates in self.transitions.items():
             for state in tostates:
                 rebuild.addtransition(pos[fromstate], pos[state], tostates[state])
-        rebuild.setstartstate(pos[self.startstate])
-        for s in self.finalstates:
-            rebuild.addfinalstates(pos[s])
+        rebuild.setstartState(pos[self.startState])
+        for s in self.finalStates:
+            rebuild.addfinalStates(pos[s])
         return rebuild
 
     def getDotFile(self):
         dotFile = "digraph DFA {\nrankdir=LR\n"
         if len(self.states) != 0:
-            dotFile += "root=s1\nstart [shape=point]\nstart->s%d\n" % self.startstate
+            dotFile += "root=s1\nstart [shape=point]\nstart->s%d\n" % self.startState
             for state in self.states:
-                if state in self.finalstates:
+                if state in self.finalStates:
                     dotFile += "s%d [shape=doublecircle]\n" % state
                 else:
                     dotFile += "s%d [shape=circle]\n" % state
@@ -145,8 +145,8 @@ class BuildAutomata:
         state1 = 1
         state2 = 2
         basic = Automata()
-        basic.setstartstate(state1)
-        basic.addfinalstates(state2)
+        basic.setstartState(state1)
+        basic.addfinalStates(state2)
         basic.addtransition(1, 2, inp)
         return basic
 
@@ -157,12 +157,12 @@ class BuildAutomata:
         state1 = 1
         state2 = m2
         plus = Automata()
-        plus.setstartstate(state1)
-        plus.addfinalstates(state2)
-        plus.addtransition(plus.startstate, a.startstate, Automata.epsilon())
-        plus.addtransition(plus.startstate, b.startstate, Automata.epsilon())
-        plus.addtransition(a.finalstates[0], plus.finalstates[0], Automata.epsilon())
-        plus.addtransition(b.finalstates[0], plus.finalstates[0], Automata.epsilon())
+        plus.setstartState(state1)
+        plus.addfinalStates(state2)
+        plus.addtransition(plus.startState, a.startState, Automata.epsilon())
+        plus.addtransition(plus.startState, b.startState, Automata.epsilon())
+        plus.addtransition(a.finalStates[0], plus.finalStates[0], Automata.epsilon())
+        plus.addtransition(b.finalStates[0], plus.finalStates[0], Automata.epsilon())
         plus.addtransition_dict(a.transitions)
         plus.addtransition_dict(b.transitions)
         return plus
@@ -174,9 +174,9 @@ class BuildAutomata:
         state1 = 1
         state2 = m2-1
         dot = Automata()
-        dot.setstartstate(state1)
-        dot.addfinalstates(state2)
-        dot.addtransition(a.finalstates[0], b.startstate, Automata.epsilon())
+        dot.setstartState(state1)
+        dot.addfinalStates(state2)
+        dot.addtransition(a.finalStates[0], b.startState, Automata.epsilon())
         dot.addtransition_dict(a.transitions)
         dot.addtransition_dict(b.transitions)
         return dot
@@ -187,12 +187,12 @@ class BuildAutomata:
         state1 = 1
         state2 = m1
         star = Automata()
-        star.setstartstate(state1)
-        star.addfinalstates(state2)
-        star.addtransition(star.startstate, a.startstate, Automata.epsilon())
-        star.addtransition(star.startstate, star.finalstates[0], Automata.epsilon())
-        star.addtransition(a.finalstates[0], star.finalstates[0], Automata.epsilon())
-        star.addtransition(a.finalstates[0], a.startstate, Automata.epsilon())
+        star.setstartState(state1)
+        star.addfinalStates(state2)
+        star.addtransition(star.startState, a.startState, Automata.epsilon())
+        star.addtransition(star.startState, star.finalStates[0], Automata.epsilon())
+        star.addtransition(a.finalStates[0], star.finalStates[0], Automata.epsilon())
+        star.addtransition(a.finalStates[0], a.startState, Automata.epsilon())
         star.addtransition_dict(a.transitions)
         return star
 

@@ -23,10 +23,10 @@ class Dfa:
         allstates = dict()
         eclose = dict()
         count = 1
-        state1 = nfa.getEClose(nfa.startstate)
-        eclose[nfa.startstate] = state1
+        state1 = nfa.getEClose(nfa.startState)
+        eclose[nfa.startState] = state1
         dfa = Automata(nfa.language)
-        dfa.setstartstate(count)
+        dfa.setstartState(count)
         states = [[state1, count]]
         allstates[count] = state1
         count +=  1
@@ -48,12 +48,12 @@ class Dfa:
                         toindex = [k for k, v in allstates.iteritems() if v  ==  trstates][0]
                     dfa.addtransition(fromindex, toindex, char)
         for value, state in allstates.iteritems():
-            if nfa.finalstates[0] in state:
-                dfa.addfinalstates(value)
+            if nfa.finalStates[0] in state:
+                dfa.addfinalStates(value)
         self.dfa = dfa
 
     def acceptsString(self, string):
-        currentstate = self.dfa.startstate
+        currentstate = self.dfa.startState
         for ch in string:
             if ch==":e:":
                 continue
@@ -61,7 +61,7 @@ class Dfa:
             if len(st) == 0:
                 return False
             currentstate = st[0]
-        if currentstate in self.dfa.finalstates:
+        if currentstate in self.dfa.finalStates:
             return True
         return False
 
