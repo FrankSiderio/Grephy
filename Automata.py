@@ -67,6 +67,12 @@ class Automata:
         return allstates
 
     def display(self):
+        input = "abc"
+        currentState = self.startState
+
+        for i in input:
+            print i
+
         print "states:", self.states
         print "start state: ", self.startState
         print "final states:", self.finalStates
