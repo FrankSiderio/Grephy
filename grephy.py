@@ -97,7 +97,7 @@ def createAutomatas():
             if(dfaFile != None):
                 dfa.createDotFile(dfaFile)
 
-            # dfa.display()
+            dfa.display()
 
             # For each input see if it matches
             for i in input:

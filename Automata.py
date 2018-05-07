@@ -141,7 +141,7 @@ class Automata:
         inLanguage = False
 
         for i in input:
-            if i in self.language:
+            if(i in self.language):
                 inLanguage = True
             else:
                 inLanguage = False
@@ -159,19 +159,18 @@ class Automata:
             # For each character in the input
             for i in input:
                 # For each transition
-                for fromstate, tostates in self.transitions.items():
-                    for state in tostates:
-                        for char in tostates[state]:
+                for fromState, toStates in self.transitions.items():
+                    for state in toStates:
+                        for char in toStates[state]:
                             # If the current state is the first state in the transition
-                            if(fromstate == currentState):
+                            if(fromState == currentState):
                                 # If the character in the transition is the same as the character in the input
                                 if(char == i):
                                     currentState = state
 
             # If the current state is the same as the final state then the input passes
-            for finalState in self.finalStates:
-                if(currentState == finalState):
-                    matches = True
+            if(currentState in self.finalStates):
+                matches = True
 
         if(matches):
             print input
