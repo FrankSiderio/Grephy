@@ -34,15 +34,17 @@ class Nfa:
             # If the character is valid in the alphabet
             if char in self.alphabet:
                 language.add(char) # add it to the language
-                if previous != self.dot and (previous in self.alphabet or previous in [self.closingBracket,self.star]):
+
+                if previous != self.dot and (previous in self.alphabet or previous in [self.closingBracket, self.star]):
                     self.addOperatorToStack(self.dot)
-                self.automata.append(BuildAutomata.basicstruct(char))
+                self.automata.append(BuildAutomata.basicStructure(char))
 
             # Otherwise its a character used to define how the nfa works
             elif char  ==  self.openingBracket:
-                if previous != self.dot and (previous in self.alphabet or previous in [self.closingBracket,self.star]):
+                if previous != self.dot and (previous in self.alphabet or previous in [self.closingBracket, self.star]):
                     self.addOperatorToStack(self.dot)
                 self.stack.append(char)
+
             elif char  ==  self.closingBracket:
                 if previous in self.operators:
                     raise BaseException("Error processing '%s' after '%s'" % (char, previous))
@@ -54,10 +56,12 @@ class Nfa:
                         break
                     elif o in self.operators:
                         self.processOperator(o)
+
             elif char == self.star:
                 if previous in self.operators or previous  == self.openingBracket or previous == self.star:
                     raise BaseException("Error processing '%s' after '%s'" % (char, previous))
                 self.processOperator(char)
+
             elif char in self.operators:
                 if previous in self.operators or previous  == self.openingBracket:
                     raise BaseException("Error processing '%s' after '%s'" % (char, previous))
@@ -66,12 +70,15 @@ class Nfa:
             else:
                 raise BaseException("Symbol '%s' is not allowed" % char)
             previous = char
+
         while len(self.stack) != 0:
             op = self.stack.pop()
             self.processOperator(op)
+
         if len(self.automata) > 1:
             print self.automata
             raise BaseException("Regex could not be parsed successfully")
+            
         self.nfa = self.automata.pop()
         self.nfa.language = language
 

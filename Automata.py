@@ -141,7 +141,7 @@ class BuildAutomata:
     # Class for building e-nfa basic structures
 
     @staticmethod
-    def basicstruct(inp):
+    def basicStructure(inp):
         state1 = 1
         state2 = 2
         basic = Automata()

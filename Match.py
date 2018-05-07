@@ -1,5 +1,6 @@
 
-def match(re, s): return run(prepare(re), s)
+def match(regex, s):
+    return run(prepare(regex), s)
 
 def run(states, s):
     for c in s:
