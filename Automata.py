@@ -67,12 +67,6 @@ class Automata:
         return allstates
 
     def display(self):
-        input = "abc"
-        currentState = self.startState
-
-        for i in input:
-            print i
-
         print "states:", self.states
         print "start state: ", self.startState
         print "final states:", self.finalStates
@@ -142,6 +136,46 @@ class Automata:
         file = open("graphs/" + filePath + ".dot", "w+")
         file.write(self.getDotFile())
         file.close()
+
+    def inLanguage(self, input):
+        inLanguage = False
+
+        for i in input:
+            if i in self.language:
+                inLanguage = True
+            else:
+                inLanguage = False
+                break
+
+        return inLanguage
+
+    def match(self, input):
+        currentState = self.startState
+        matches = False
+
+        if(not self.inLanguage(input)):
+            matches = False
+        else:
+            # For each character in the input
+            for i in input:
+                # For each transition
+                for fromstate, tostates in self.transitions.items():
+                    for state in tostates:
+                        for char in tostates[state]:
+                            # If the current state is the first state in the transition
+                            if(fromstate == currentState):
+                                # If the character in the transition is the same as the character in the input
+                                if(char == i):
+                                    currentState = state
+
+            # If the current state is the same as the final state then the input passes
+            for finalState in self.finalStates:
+                if(currentState == finalState):
+                    matches = True
+
+        if(matches):
+            print input
+            matches = False
 
 class BuildAutomata:
     # Class for building e-nfa basic structures

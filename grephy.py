@@ -2,7 +2,6 @@ import os
 import sys
 from Nfa import *
 from Dfa import *
-from Match import *
 
 # Example call - python Grephy.py -n nfaFile -d dfaFile tests/regex.txt tests/input.txt
 nfaFile = None
@@ -98,13 +97,12 @@ def createAutomatas():
             if(dfaFile != None):
                 dfa.createDotFile(dfaFile)
 
-            dfa.display()
+            # dfa.display()
 
             # For each input see if it matches
             for i in input:
                 i = i.rstrip()
-                if(match(regex, i)):
-                    print i
+                dfa.match(i)
 
             print "Done."
 
