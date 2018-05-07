@@ -133,7 +133,7 @@ class Automata:
 
     # Creates the dot file
     def createDotFile(self, filePath):
-        file = open(filePath + ".dot", "w+")
+        file = open("graphs/" + filePath + ".dot", "w+")
         file.write(self.getDotFile())
         file.close()
 

@@ -66,45 +66,47 @@ def createAutomatas():
         print("Found input and regex files.")
         if(os.stat(inputFile).st_size == 0 and os.stat(regexFile).st_size == 0):
             print("Files are empty. Try again.")
-        inputFile = open(inputFile)
-        regexFile = open(regexFile)
 
-        with regexFile as f:
-            regex = f.readline()
+        else:
+            inputFile = open(inputFile)
+            regexFile = open(regexFile)
 
-        with inputFile as f:
-            input = f.readlines()
+            with regexFile as f:
+                regex = f.readline()
 
-        regex = regex.rstrip()
+            with inputFile as f:
+                input = f.readlines()
 
-        nfaObject = Nfa(regex)
-        nfa = nfaObject.getNFA()
+            regex = regex.rstrip()
 
-        dfaObject = Dfa(nfa)
-        dfa = dfaObject.getDFA()
+            nfaObject = Nfa(regex)
+            nfa = nfaObject.getNFA()
 
-        # Draw the graphs if the user wants
-        if(draw):
+            dfaObject = Dfa(nfa)
+            dfa = dfaObject.getDFA()
+
+            # Draw the graphs if the user wants
+            if(draw):
+                if(nfaFile != None):
+                    drawGraph(nfa, nfaFile)
+                if(dfaFile != None):
+                    drawGraph(dfa, dfaFile)
+
+            # Create the dot files
             if(nfaFile != None):
-                drawGraph(nfa, nfaFile)
+                nfa.createDotFile(nfaFile)
             if(dfaFile != None):
-                drawGraph(dfa, dfaFile)
+                dfa.createDotFile(dfaFile)
 
-        # Create the dot files
-        if(nfaFile != None):
-            nfa.createDotFile(nfaFile)
-        if(dfaFile != None):
-            dfa.createDotFile(dfaFile)
+            dfa.display()
 
-        dfa.display()
+            # For each input see if it matches
+            for i in input:
+                i = i.rstrip()
+                if(match(regex, i)):
+                    print i
 
-        # For each input see if it matches 
-        for i in input:
-            i = i.rstrip()
-            if(match(regex, i)):
-                print i
-
-        print "Done."
+            print "Done."
 
     else:
         print("File not found. Try again")
